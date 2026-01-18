@@ -5,6 +5,14 @@ import tailwindcss from '@tailwindcss/vite';
 
 // https://astro.build/config
 export default defineConfig({
+  image: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'catatan.co.id',
+      },
+    ],
+  },
   vite: {
     plugins: [tailwindcss()]
   }

@@ -8,7 +8,7 @@ import { id } from 'date-fns/locale';
 
 const url = new URL(Astro.request.url);
 const query = url.searchParams.get('q') || '';
-const posts = searchPosts(query);
+const posts = await searchPosts(query);
 ---
 
 <MainLayout title={`Hasil Pencarian: ${query} - NewsPortal`}>
@@ -40,9 +40,9 @@ const posts = searchPosts(query);
                   class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                 />
               </a>
-              <span class="absolute top-4 left-4 bg-white/90 backdrop-blur-sm px-3 py-1 text-xs font-bold text-blue-600 rounded-full uppercase tracking-wide">
+              <a href={`/category/${post.categorySlug}`} class="absolute top-4 left-4 bg-white/90 backdrop-blur-sm px-3 py-1 text-xs font-bold text-blue-600 rounded-full uppercase tracking-wide hover:bg-blue-600 hover:text-white transition-colors">
                 {post.category}
-              </span>
+              </a>
             </div>
             <div class="p-6 flex flex-col flex-grow">
               <div class="flex items-center text-xs text-gray-500 mb-3">
@@ -50,10 +50,7 @@ const posts = searchPosts(query);
                 <span class="mx-2">•</span>
                 <time>{format(new Date(post.date), 'd MMMM yyyy', { locale: id })}</time>
               </div>
-              <h3 class="text-xl font-bold text-gray-900 mb-3 line-clamp-2 hover:text-blue-600 transition-colors">
-                <a href={`/${post.slug}`}>
-                  {post.title}
-                </a>
+              <h3 class="text-xl font-bold text-gray-900 mb-3 line-clamp-2 hover:text-blue-600 transition-colors" set:html={post.title}>
               </h3>
               <p class="text-gray-600 text-sm line-clamp-3 mb-4 flex-grow">
                 {post.excerpt}

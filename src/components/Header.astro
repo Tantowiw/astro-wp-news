@@ -1,5 +1,20 @@
 ---
+import { getCategories, PRIORITY_CATEGORIES } from '../lib/data';
+
+const allCategories = await getCategories();
+
+// Map untuk akses cepat dan menyimpan urutan
+const categoryMap = new Map();
+allCategories.forEach(cat => {
+  categoryMap.set(cat.name.toLowerCase(), cat);
+});
+
+// Urutkan kategori berdasarkan list prioritas yang sudah terpusat
+const categories = PRIORITY_CATEGORIES
+  .map(name => categoryMap.get(name.toLowerCase()))
+  .filter(Boolean);
 ---
+
 
 <header id="main-header" class="fixed w-full top-0 z-50 bg-black text-white shadow-md">
   <!-- Top Bar: Logo + Utility Icons -->
@@ -46,20 +61,43 @@
   <!-- Navigation Bar -->
   <div class="bg-black border-b border-gray-800">
     <div class="max-w-7xl mx-auto px-4">
-      <nav class="overflow-x-auto no-scrollbar">
+      <nav class="overflow-x-auto md:overflow-visible no-scrollbar">
         <ul class="flex items-center gap-4 md:gap-6 whitespace-nowrap text-xs md:text-sm font-medium h-10 md:h-11">
           <li><a href="/" class="text-white hover:text-orange-500 transition-colors">Terpopuler</a></li>
-          <li><a href="/category/news" class="text-gray-300 hover:text-orange-500 transition-colors">News</a></li>
-          <li><a href="/category/nusantara" class="text-gray-300 hover:text-orange-500 transition-colors">Nusantara</a></li>
-          <li><a href="/category/event" class="text-gray-300 hover:text-orange-500 transition-colors">Event</a></li>
-          <li><a href="/category/jagat-literasi" class="text-gray-300 hover:text-orange-500 transition-colors">Jagat Literasi</a></li>
-          <li><a href="/category/cakrawala" class="text-gray-300 hover:text-orange-500 transition-colors">Cakrawala</a></li>
-          <li><a href="/category/nasional" class="text-gray-300 hover:text-orange-500 transition-colors">Nasional</a></li>
-          <li><a href="/category/global" class="text-gray-300 hover:text-orange-500 transition-colors">Global</a></li>
-          <li><a href="/category/teknologi" class="text-gray-300 hover:text-orange-500 transition-colors">Teknologi</a></li>
-          <li><a href="/category/bisnis" class="text-gray-300 hover:text-orange-500 transition-colors">Bisnis</a></li>
-          <li><a href="/category/bola" class="text-gray-300 hover:text-orange-500 transition-colors">Bola</a></li>
-          <li><a href="/category/lifestyle" class="text-gray-300 hover:text-orange-500 transition-colors">Lifestyle</a></li>
+          {categories.map((category) => (
+            <li class="relative group h-full flex items-center">
+              <div class="flex items-center gap-1 py-2 md:py-3 h-full">
+                <a 
+                  href={`/category/${category.slug}`} 
+                  class="text-gray-300 hover:text-orange-500 transition-colors"
+                >
+                  {category.name}
+                </a>
+                {category.children && category.children.length > 0 && (
+                  <svg class="w-2.5 h-2.5 text-gray-500 group-hover:text-orange-500 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                  </svg>
+                )}
+              </div>
+              
+              {category.children && category.children.length > 0 && (
+                <div class="absolute top-full left-0 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-[60] pt-2">
+                  <ul class="bg-black border border-gray-800 shadow-2xl py-2 min-w-[200px] border-t-2 border-t-orange-500 rounded-b-md">
+                    {category.children.map((child) => (
+                      <li>
+                        <a 
+                          href={`/category/${child.slug}`} 
+                          class="block px-4 py-2.5 text-xs text-gray-400 hover:bg-gray-900 hover:text-white transition-colors border-b border-gray-900 last:border-0"
+                        >
+                          {child.name}
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+            </li>
+          ))}
         </ul>
       </nav>
     </div>

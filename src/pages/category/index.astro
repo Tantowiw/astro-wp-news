@@ -1,0 +1,46 @@
+---
+import MainLayout from '../../layouts/MainLayout.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import { getCategories } from '../../lib/data';
+
+const categories = await getCategories();
+---
+
+<MainLayout title="Daftar Kategori Berita - NewsPortal">
+  <Header />
+
+  <main class="pt-32 pb-16 min-h-screen bg-gray-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      
+      <!-- Page Header -->
+      <div class="mb-12 border-b border-gray-200 pb-8 bg-white p-8 rounded-xl shadow-sm text-center">
+        <h1 class="text-3xl md:text-5xl font-extrabold text-gray-900 leading-tight">
+          Eksplorasi <span class="text-blue-600">Kategori</span>
+        </h1>
+        <p class="mt-4 text-gray-500 text-lg max-w-2xl mx-auto">
+          Temukan topik berita yang Anda sukai melalui daftar kategori lengkap kami.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        {categories.map((category) => (
+          <a 
+            href={`/category/${category.slug}`}
+            class="group bg-white p-8 rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-100 text-center hover:-translate-y-1"
+          >
+            <div class="w-16 h-16 bg-blue-50 text-blue-600 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-blue-600 group-hover:text-white transition-colors">
+              <span class="text-2xl font-bold">{category.name.charAt(0)}</span>
+            </div>
+            <h3 class="text-lg font-bold text-gray-900 group-hover:text-blue-600 transition-colors">
+              {category.name}
+            </h3>
+            <p class="text-xs text-gray-400 mt-2 font-medium">Klik untuk melihat berita</p>
+          </a>
+        ))}
+      </div>
+    </div>
+  </main>
+
+  <Footer />
+</MainLayout>
