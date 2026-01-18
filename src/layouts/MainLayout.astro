@@ -2,11 +2,17 @@
 interface Props {
 	title: string;
 	description?: string;
+  preloadImage?: string;
 }
 
 import '../styles/global.css';
+import '@fontsource/plus-jakarta-sans/400.css';
+import '@fontsource/plus-jakarta-sans/500.css';
+import '@fontsource/plus-jakarta-sans/600.css';
+import '@fontsource/plus-jakarta-sans/700.css';
+import '@fontsource/plus-jakarta-sans/800.css';
 
-const { title, description = "Berita Terkini dan Terpercaya" } = Astro.props;
+const { title, description = "Berita Terkini dan Terpercaya", preloadImage } = Astro.props;
 ---
 
 <!doctype html>
@@ -15,11 +21,9 @@ const { title, description = "Berita Terkini dan Terpercaya" } = Astro.props;
 		<meta charset="UTF-8" />
 		<meta name="description" content={description} />
 		<meta name="viewport" content="width=device-width" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<meta name="generator" content={Astro.generator} />
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="generator" content={Astro.generator} />
+    {preloadImage && <link rel="preload" as="image" href={preloadImage} fetchpriority="high" />}
 		<title>{title}</title>
 	</head>
 	<body class="bg-gray-50 text-gray-900 font-sans antialiased selection:bg-blue-600 selection:text-white">
