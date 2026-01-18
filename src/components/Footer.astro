@@ -1,0 +1,55 @@
+---
+const currentYear = new Date().getFullYear();
+---
+
+<footer class="bg-gray-900 text-white pt-12 pb-8">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+      <div class="col-span-1 md:col-span-1">
+        <a href="/" class="text-2xl font-bold text-white tracking-tight">
+          News<span class="text-blue-500">Portal</span>.
+        </a>
+        <p class="mt-4 text-gray-400 text-sm">
+          Platform berita terdepan yang menyajikan informasi terkini, akurat, dan terpercaya dari berbagai sumber.
+        </p>
+      </div>
+      
+      <div>
+        <h3 class="text-sm font-semibold uppercase tracking-wider text-gray-200">Kategori</h3>
+        <ul class="mt-4 space-y-2">
+          <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Nasional</a></li>
+          <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Internasional</a></li>
+          <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Teknologi</a></li>
+          <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Olahraga</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <h3 class="text-sm font-semibold uppercase tracking-wider text-gray-200">Perusahaan</h3>
+        <ul class="mt-4 space-y-2">
+          <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Tentang Kami</a></li>
+          <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Redaksi</a></li>
+          <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Karir</a></li>
+          <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Kontak</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <h3 class="text-sm font-semibold uppercase tracking-wider text-gray-200">Langganan</h3>
+        <p class="mt-4 text-gray-400 text-sm">Dapatkan berita terbaru langsung di inbox Anda.</p>
+        <form class="mt-4">
+          <div class="flex">
+            <input type="email" placeholder="Email Anda" class="px-4 py-2 w-full rounded-l-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+            <button class="bg-blue-600 px-4 py-2 rounded-r-lg hover:bg-blue-700 transition-colors">
+              Subscribe
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+    
+    <div class="mt-8 pt-8 border-t border-gray-800 text-center">
+      <p class="text-sm text-gray-400">&copy; {currentYear} NewsPortal. All rights reserved.</p>
+    </div>
+  </div>
+</footer>
