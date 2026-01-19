@@ -5,7 +5,8 @@ import {
   fetchPostsByCategoryGraphQL,
   searchPostsGraphQL,
   fetchHomepageDataGraphQL,
-  fetchCategoriesGraphQL
+  fetchCategoriesGraphQL,
+  fetchPostsFromDateGraphQL
 } from './graphql-api';
 import type { Post, Category } from '../types/wordpress';
 
@@ -199,7 +200,9 @@ export async function getBeritaTerkini(): Promise<Post[]> {
 
 export async function getAllPosts(): Promise<Post[]> {
   try {
-    const posts = await fetchLatestPostsGraphQL(50);
+    // ✅ Fetch posts from 1 January 2025 onwards
+    const dateFilter = '2025-01-01T00:00:00Z';
+    const posts = await fetchPostsFromDateGraphQL(dateFilter, 9999);
     return posts.length > 0 ? posts : mockPosts;
   } catch (error) {
     console.error('Error fetching all posts, using mock data:', error);

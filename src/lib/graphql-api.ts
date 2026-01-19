@@ -1,4 +1,4 @@
-import { graphqlClient, GET_POSTS_QUERY, GET_POST_BY_SLUG_QUERY, SEARCH_POSTS_QUERY, GET_POSTS_BY_CATEGORY_QUERY, GET_HOMEPAGE_DATA_QUERY, GET_CATEGORIES_QUERY } from './graphql-client';
+import { graphqlClient, GET_POSTS_QUERY, GET_POST_BY_SLUG_QUERY, SEARCH_POSTS_QUERY, GET_POSTS_BY_CATEGORY_QUERY, GET_HOMEPAGE_DATA_QUERY, GET_CATEGORIES_QUERY, GET_POSTS_FROM_DATE_QUERY } from './graphql-client';
 import type { Post } from '../types/wordpress';
 
 export interface Category {
@@ -169,6 +169,30 @@ export async function fetchPostsByCategoryGraphQL(categoryName: string, first: n
         return data.posts.nodes.map(transformGraphQLPost);
     } catch (error) {
         console.error('Error fetching posts by category from GraphQL:', error);
+        return [];
+    }
+}
+
+/**
+ * Get posts from a specific date onwards using GraphQL
+ * Filters client-side since WordPress GraphQL dateQuery is limited
+ * @param after ISO date string (e.g. "2025-01-01T00:00:00Z")
+ * @param first Number of posts to fetch
+ */
+export async function fetchPostsFromDateGraphQL(after: string, first: number = 50): Promise<Post[]> {
+    try {
+        const data: any = await cachedRequest(GET_POSTS_FROM_DATE_QUERY, {
+            first: Math.min(first + 500, 9999) // Fetch extra to account for filtering
+        });
+        
+        const afterDate = new Date(after).getTime();
+        const filtered = data.posts.nodes
+            .map(transformGraphQLPost)
+            .filter((post: Post) => new Date(post.date).getTime() >= afterDate);
+        
+        return filtered.slice(0, first);
+    } catch (error) {
+        console.error('Error fetching posts from date from GraphQL:', error);
         return [];
     }
 }

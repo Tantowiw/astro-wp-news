@@ -43,6 +43,40 @@ export const GET_POSTS_QUERY = `
   }
 `;
 
+export const GET_POSTS_FROM_DATE_QUERY = `
+  query GetPostsFromDate($first: Int = 10) {
+    posts(first: $first, where: {orderby: {field: DATE, order: DESC}}) {
+      nodes {
+        id
+        databaseId
+        slug
+        title
+        excerpt
+        content
+        date
+        author {
+          node {
+            name
+          }
+        }
+        featuredImage {
+          node {
+            sourceUrl
+            altText
+            caption
+          }
+        }
+        categories {
+          nodes {
+            name
+            slug
+          }
+        }
+      }
+    }
+  }
+`;
+
 export const GET_POST_BY_SLUG_QUERY = `
   query GetPostBySlug($slug: ID!) {
     post(id: $slug, idType: SLUG) {
