@@ -2,6 +2,7 @@
 import MainLayout from '../layouts/MainLayout.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
+import ShareButtons from '../components/ShareButtons.astro';
 import { getAllPosts, getPopularPosts, getPostBySlug } from '../lib/data';
 import { format } from 'date-fns';
 import { id } from 'date-fns/locale';
@@ -102,6 +103,16 @@ const popularPosts = await getPopularPosts();
                 prose-blockquote:border-l-4 prose-blockquote:border-blue-500 prose-blockquote:pl-6 prose-blockquote:italic prose-blockquote:my-8">
                 <div set:html={post.content} class="wp-content" />
               </article>
+
+              <!-- Share Buttons -->
+              <div class="mt-8 pt-8 border-t border-gray-200">
+                <ShareButtons 
+                  title={post.title}
+                  url={Astro.url.href}
+                  description={post.excerpt}
+                />
+              </div>
+            </div>
 
 <style is:global>
   .wp-content p {

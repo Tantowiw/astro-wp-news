@@ -200,9 +200,9 @@ export async function getBeritaTerkini(): Promise<Post[]> {
 
 export async function getAllPosts(): Promise<Post[]> {
   try {
-    // ✅ Fetch posts from 1 January 2025 onwards
-    const dateFilter = '2025-01-01T00:00:00Z';
-    const posts = await fetchPostsFromDateGraphQL(dateFilter, 9999);
+    // ✅ Fetch ALL posts tanpa filter date
+    // Menggunakan fetchLatestPostsGraphQL dengan limit besar
+    const posts = await fetchLatestPostsGraphQL(9999);
     return posts.length > 0 ? posts : mockPosts;
   } catch (error) {
     console.error('Error fetching all posts, using mock data:', error);
