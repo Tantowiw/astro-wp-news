@@ -2,20 +2,39 @@
 import MainLayout from '../layouts/MainLayout.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
-import { getAllPosts, getPopularPosts } from '../lib/data';
+import { getAllPosts, getPopularPosts, getPostBySlug } from '../lib/data';
 import { format } from 'date-fns';
 import { id } from 'date-fns/locale';
 
+// Prerender hanya posts yang popular/lama
 export async function getStaticPaths() {
   const posts = await getAllPosts();
+  
+  // Prerender semua posts untuk SSG
+  // (bisa dioptimasi: hanya prerender posts lama, yg baru on-demand)
   return posts.map(post => ({
     params: { slug: post.slug },
     props: { post },
   }));
 }
 
-const { post } = Astro.props;
+// Fallback untuk post baru yang belum prerender
+const { slug } = Astro.params;
+let { post } = Astro.props;
+
+// Jika post tidak ada di props (on-demand render), fetch dari data
+if (!post) {
+  const allPosts = await getAllPosts();
+  post = allPosts.find(p => p.slug === slug);
+  
+  // Jika masih tidak ada, return 404
+  if (!post) {
+    return Astro.redirect('/404');
+  }
+}
+
 const popularPosts = await getPopularPosts();
+---
 ---
 
 <MainLayout title={`${post.title} - NewsPortal`} description={post.excerpt}>
