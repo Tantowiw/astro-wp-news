@@ -17,7 +17,14 @@ const {
   pemkabKotim: pemkabKotimPosts,
   palangkaraya: palangkarayaPosts,
   politik: politikPosts
-} = await getHomepageData();
+} = await getHomepageData().catch(err => {
+  console.error('[CRITICAL-ERROR] Homepage Fetch Failed:', err);
+  if (err.response) {
+    console.error('[CRITICAL-ERROR] GraphQL Error Details:', JSON.stringify(err.response, null, 2));
+  }
+  return {}; // Safe fallback to avoid 500
+});
+console.log('Homepage Data Status:', { featured: !!featuredPost, latest: latestPosts?.length });
 const posts = latestPosts; // Using latestPosts as 'posts' fallback if needed
 ---
 
