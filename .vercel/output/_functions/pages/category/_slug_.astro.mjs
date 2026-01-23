@@ -1,0 +1,63 @@
+import { c as createComponent, a as createAstro, r as renderComponent, b as renderTemplate, m as maybeRenderHead, d as addAttribute, u as unescapeHTML } from '../../chunks/astro/server_DUxqW-ZV.mjs';
+import 'piccolore';
+import { g as getPostsByCategory, a as getPopularPosts, b as getCategories, $ as $$Header, c as $$Footer, d as $$MainLayout } from '../../chunks/Footer_DDHsvalb.mjs';
+import { format } from 'date-fns';
+import { id } from 'date-fns/locale';
+export { renderers } from '../../renderers.mjs';
+
+const $$Astro = createAstro();
+async function getStaticPaths() {
+  const categories = await getCategories();
+  function flattenCategories(cats) {
+    let flattened = [];
+    cats.forEach((category) => {
+      flattened.push(category);
+      if (category.children && category.children.length > 0) {
+        flattened = flattened.concat(flattenCategories(category.children));
+      }
+    });
+    return flattened;
+  }
+  const allCategories = flattenCategories(categories);
+  return allCategories.map((category) => ({
+    params: { slug: category.slug },
+    props: {
+      categoryName: category.name,
+      subCategories: category.children || []
+    }
+  }));
+}
+const $$slug = createComponent(async ($$result, $$props, $$slots) => {
+  const Astro2 = $$result.createAstro($$Astro, $$props, $$slots);
+  Astro2.self = $$slug;
+  const { slug } = Astro2.params;
+  const { categoryName, subCategories } = Astro2.props;
+  const posts = await getPostsByCategory(slug);
+  const popularPosts = await getPopularPosts();
+  return renderTemplate`${renderComponent($$result, "MainLayout", $$MainLayout, { "title": `Berita ${categoryName} - NewsPortal` }, { "default": async ($$result2) => renderTemplate` ${renderComponent($$result2, "Header", $$Header, {})} ${maybeRenderHead()}<main class="pt-32 pb-16 min-h-screen bg-gray-50"> <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"> <!-- Page Header --> <div class="mb-12 border-b border-gray-200 pb-8 bg-white p-8 rounded-xl shadow-sm"> <nav class="flex mb-4 text-sm text-gray-500" aria-label="Breadcrumb"> <ol class="inline-flex items-center space-x-1 md:space-x-3"> <li class="inline-flex items-center"> <a href="/" class="hover:text-blue-600 transition-colors">Home</a> </li> <li aria-current="page"> <div class="flex items-center"> <svg class="w-3 h-3 text-gray-400 mx-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10"> <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 9 4-4-4-4"></path> </svg> <span class="ml-1 text-blue-600 font-medium md:ml-2">${categoryName}</span> </div> </li> </ol> </nav> <h1 class="text-3xl md:text-5xl font-extrabold text-gray-900 leading-tight"> <span class="text-blue-600">Berita</span> ${categoryName} </h1> <p class="mt-4 text-gray-500 text-lg max-w-2xl">
+Kumpulan berita terbaru dan terpercaya seputar ${categoryName} dari seluruh penjuru nusantara.
+</p> ${subCategories.length > 0 && renderTemplate`<div class="mt-8"> <h2 class="text-xs font-bold uppercase tracking-widest text-gray-400 mb-4">Sub Kategori ${categoryName}:</h2> <div class="flex flex-wrap gap-2"> ${subCategories.map((sub) => renderTemplate`<a${addAttribute(`/category/${sub.slug}`, "href")} class="px-5 py-2.5 bg-gray-50 text-gray-700 rounded-lg text-sm font-bold hover:bg-blue-600 hover:text-white transition-all shadow-sm border border-gray-200"> ${sub.name} </a>`)} </div> </div>`} </div> <div class="grid grid-cols-1 lg:grid-cols-3 gap-12"> <!-- Main Content --> <div class="lg:col-span-2 space-y-8"> ${posts.length > 0 ? renderTemplate`<div class="grid grid-cols-1 md:grid-cols-2 gap-8"> ${posts.map((post) => renderTemplate`<article class="bg-white rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden border border-gray-100 flex flex-col group h-full"> <div class="relative h-52 overflow-hidden"> <a${addAttribute(`/${post.slug}`, "href")}> <img${addAttribute(post.image, "src")}${addAttribute(post.title, "alt")} class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"> </a> </div> <div class="p-6 flex flex-col flex-grow"> <div class="flex items-center text-[10px] font-bold text-blue-600 uppercase tracking-widest mb-3"> <span>${categoryName}</span> <span class="mx-2 text-gray-300">•</span> <span class="text-gray-500">${format(new Date(post.date), "d MMM yyyy", { locale: id })}</span> </div> <a${addAttribute(`/${post.slug}`, "href")}> <h3 class="text-xl font-bold text-gray-900 mb-3 leading-snug group-hover:text-blue-600 transition-colors">${unescapeHTML(post.title)}</h3> </a> <p class="text-gray-600 text-sm line-clamp-3 mb-6 flex-grow">${unescapeHTML(post.excerpt)}</p> <a${addAttribute(`/${post.slug}`, "href")} class="inline-flex items-center text-gray-900 font-bold text-xs uppercase tracking-wider hover:text-blue-600 transition-colors">
+Baca Selengkapnya
+<svg class="w-4 h-4 ml-2 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"> <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path> </svg> </a> </div> </article>`)} </div>` : renderTemplate`<div class="bg-white rounded-xl p-12 text-center shadow-sm border border-gray-100"> <svg class="w-16 h-16 text-gray-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"> <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10l4 4v10a2 2 0 01-2 2z"></path> <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M14 4v4h4"></path> </svg> <h3 class="text-xl font-bold text-gray-900 mb-2">Belum Ada Berita</h3> <p class="text-gray-500">Kategori ini belum memiliki berita saat ini. Silakan cek kembali nanti.</p> <a href="/" class="mt-8 inline-block px-6 py-2 bg-blue-600 text-white font-bold rounded-lg hover:bg-blue-700 transition-colors">
+Kembali ke Beranda
+</a> </div>`} </div> <!-- Sidebar --> <aside class="space-y-12"> <!-- Popular Section --> <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100"> <h2 class="text-lg font-bold text-gray-900 mb-6 flex items-center"> <span class="w-2 h-6 bg-orange-500 mr-3 rounded-full"></span>
+Terpopuler
+</h2> <div class="space-y-6"> ${popularPosts.map((post, index) => renderTemplate`<article class="flex gap-4 group"> <div class="text-2xl font-black text-gray-200 group-hover:text-orange-500 transition-colors"> ${String(index + 1).padStart(2, "0")} </div> <div class="flex-1"> <a${addAttribute(`/${post.slug}`, "href")}> <h3 class="text-sm font-bold text-gray-900 leading-snug group-hover:text-blue-600 transition-colors mb-1">${unescapeHTML(post.title)}</h3> </a> <div class="text-[10px] text-gray-400 font-bold uppercase tracking-wider"> ${format(new Date(post.date), "d MMM yyyy", { locale: id })} </div> </div> </article>`)} </div> </div> <!-- Advertisement Placeholder --> <div class="sticky top-32 bg-gray-200 rounded-xl aspect-[3/4] flex items-center justify-center text-gray-400 font-bold uppercase tracking-widest text-xs">
+Advertisement
+</div> </aside> </div> </div> </main> ${renderComponent($$result2, "Footer", $$Footer, {})} ` })}`;
+}, "D:/VibeCoding AntiGravity/astro-wp-news/src/pages/category/[slug].astro", void 0);
+
+const $$file = "D:/VibeCoding AntiGravity/astro-wp-news/src/pages/category/[slug].astro";
+const $$url = "/category/[slug]";
+
+const _page = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+  __proto__: null,
+  default: $$slug,
+  file: $$file,
+  getStaticPaths,
+  url: $$url
+}, Symbol.toStringTag, { value: 'Module' }));
+
+const page = () => _page;
+
+export { page };
